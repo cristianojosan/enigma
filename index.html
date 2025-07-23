@@ -619,48 +619,24 @@ section:last-of-type {
   <div class="container">
   <!-- aici pui tot conținutul tău -->
 
-.burger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-  gap: 5px;
-}
-
-.burger div {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  transition: 0.3s;
-}
-
-@media (max-width: 768px) {
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    background-color: #1e3666;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    padding: 15px;
-    z-index: 999;
-  }
-
-  .nav-menu a {
-    margin: 10px 0;
-    display: block;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-
-  .burger {
-    display: flex;
-  }
-}
+<header class="site-header">
+  <div class="container nav-container">
+    <div class="logo">
+      <a href="index.html" style="text-decoration: none; color: white; font-weight: 800;">ENIGMA</a>
+    </div>
+    <div class="burger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <nav class="nav-menu" id="navMenu">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="get-in-touch.html">Get in Touch</a>
+    </nav>
+  </div>
+</header>
 
 
 
