@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enigma Ltd - Cladding Subcontractor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f4f6f8;
+    }
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+    [data-animate].in-view {
+      opacity: 1;
+      transform: none;
+    }
+    .hero-banner {
+      background: url('poze/3.jpg') no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 100px 60px 100px;
+      position: relative;
+    }
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.55);
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin-left: 40px;
+    }
+    .hero-brand {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      margin-top: -30px;
+    }
+    .hero-brand img {
+      max-height: 80px;
+    }
+    .hero-brand-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .hero-brand-text .name {
+      font-size: 1.6em;
+      line-height: 1;
+    }
+    .hero-brand-text .type {
+      font-size: 1em;
+      line-height: 1;
+    }
+    .hero-content h1 {
+      font-size: 2.8em;
+      margin-bottom: 0.5em;
+      font-weight: 800;
+    }
+    .hero-content p {
+      font-size: 1.2em;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+    .cta-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease;
+      margin-left: 5px;
+    }
+    .cta-button:hover {
+      background-color: #3b9440;
+    }
+    .why-choose {
+      display: flex;
+      flex-wrap: nowrap;
+      height: 600px;
+      background-attachment: fixed;
+      background-image: url('poze/8.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .why-text {
+      flex: 1;
+      background-color: rgba(30, 54, 102, 0.9);
+      color: white;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .why-text h2 {
+      font-size: 2.4em;
+      margin-bottom: 20px;
+      font-weight: 800;
+    }
+    .why-text ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+    .why-text li {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+    .why-image {
+      display: none;
+    }
+    .carousel {
+      display: flex;
+      gap: 20px;
+      padding: 60px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      animation: scrollLeft 24s linear infinite;
+      gap: 20px;
+    }
+    .carousel-track img {
+      flex: 0 0 auto;
+      width: 23%;
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.5s;
+    }
+    .carousel-track img:hover {
+      transform: scale(1.05);
+    }
+    @keyframes scrollLeft {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .contact {
+      background-color: #1e3666;
+      color: white;
+      padding: 60px 20px;
+    }
+    .contact form {
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .contact input, .contact textarea {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+    .contact button {
+      background-color: #00cec9;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1rem;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+    .contact button:hover {
+      background-color: #009e9d;
+    }
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .why-section {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 1024px) {
+      .carousel-track img {
+        width: 30%;
+      }
+    }
+    @media (max-width: 768px) {
+      .hero-banner {
+        padding: 30px;
+        align-items: center;
+        text-align: center;
+      }
+      .hero-content {
+        margin-left: 0;
+      }
+      .hero-brand {
+        justify-content: center;
+        margin-top: 0;
+      }
+      .hero-content h1 {
+        font-size: 2em;
+      }
+      .why-choose {
+        flex-direction: column;
+        height: auto;
+      }
+      .why-text, .why-image {
+        max-width: 100%;
+        height: auto;
+        padding: 40px 20px;
+      }
+      .carousel-track img {
+        width: 45%;
+      }
+    }
+    .trusted-by {
+      background-color: #f4f6f8;
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #444;
+    }
+    .trusted-by .logos {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .trusted-by .logos img {
+      max-height: 50px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .trusted-by .logos img:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .why-choose {
+  display: flex;
+  flex-wrap: wrap;
+  background: url('poze/8.jpg') no-repeat center center / cover;
+  background-attachment: fixed;
+  color: white;
+  padding: 80px 60px;
+  position: relative;
+  min-height: 600px;
+}
+
+.why-choose::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 34, 85, 0.75);
+  z-index: 0;
+}
+
+.why-text, .trusted {
+  flex: 1;
+  z-index: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.why-text {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.why-text h2,
+.trusted h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.trusted-inner {
+  text-align: center;
+}
+
+.trusted .logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.trusted .logos img {
+  height: 100px;
+  max-width: 150px;
+  object-fit: contain;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.trusted .logos img.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .why-choose {
+    flex-direction: column;
+    text-align: center;
+  }
+  .trusted .logos {
+    justify-content: center;
+  }
+}
+.services-section {
+  position: relative;
+  background-color: #ffffff;
+  padding: 100px 20px;
+  text-align: center;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.services-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('poze/18.jpg') no-repeat center center / cover;
+  opacity: 0.5; /* ajustează după preferință */
+  z-index: 0;
+}
+.services-header,
+.services-grid {
+  position: relative;
+  z-index: 1;
+}
+
+
+.services-header h2 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #1e3666;
+  margin-bottom: 10px;
+}
+
+.services-header p {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 50px;
+  max-width: 700px;
+  margin-inline: auto;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.service-card {
+  background-color: #f8f9fb;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease;
+  cursor: pointer;
+}
+
+/* Când cardul intră în view, activăm efectul inițial */
+.service-card.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover funcționează DOAR dacă cardul are deja clasa .in-view */
+.service-card.in-view:hover {
+  transform: translateY(-10px) scale(1.04);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+}
+.service-card {
+  text-decoration: none;  /* elimină sublinierea linkului */
+  color: inherit;         /* moștenește culoarea normală a textului */
+}
+.service-card h3,
+.service-card p {
+  text-decoration: none;
+}
+
+
+section {
+  padding-top: 80px;
+  margin-top: 40px;
+}
+
+
+
+
+.service-card img {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+.service-card h3 {
+  color: #1e3666;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.service-card p {
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-inline: 20px;
+}
+
+body {
+  background-color: #dfeefa;
+}
+
+section:first-of-type {
+   margin-top: 40px;
+  padding-top: 0;
+}
+section:last-of-type {
+  margin-bottom: 80px;
+}
+
+
+
+
+
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.service-card').forEach(el => {
+    observer.observe(el);
+  });
+});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('[data-animate]').forEach(el => {
+        observer.observe(el);
+      });
+    });
+    
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.trusted .logos img').forEach(el => {
+      observer.observe(el);
+    });
+  });
+
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const animateObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          animateObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.animate').forEach(el => {
+      el.classList.add('fade-up'); // Adaugă fade-up aici!
+      animateObserver.observe(el);
+    });
+  });
+
+
+
+
+
+
+  </script>
+  <style>
+    .site-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #1e3666;
+  color: white;
+  padding: 15px 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-menu a {
+  margin-left: 20px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  color: #00cec9;
+}
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+  <!-- aici pui tot conținutul tău -->
+
+  <header class="site-header">
+  <div class="container nav-container">
+    <div class="logo">
+      <a href="index.html" style="text-decoration: none; color: white; font-weight: 800;">ENIGMA</a>
+    </div>
+    <nav class="nav-menu">
+      <a href="index.html#services">Services</a>
+      <a href="index.html#why">Why Us</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="get-in-touch.html">Get in Touch</a>
+    </nav>
+  </div>
+</header>
+
+
+<section class="hero-section">
+  <div class="hero-banner" data-animate>
+    <div class="hero-content">
+      <div class="hero-brand">
+        <img src="your-logo.png" alt="Enigma Logo">
+        <div class="hero-brand-text">
+          <span class="name">ENIGMA</span>
+          <span class="type">CONSTRUCTION</span>
+        </div>
+      </div>
+      <h1>Precision Metal Cladding for Data Centers</h1>
+      <p>We deliver large-scale insulated panel installations across Europe — fast, reliable, and always professional.</p>
+      <a href="#contact" class="cta-button">Request a Quote</a>
+    </div>
+  </div>
+</section>
+  <section id="services" class="services-section">
+  <div class="services-header animate">
+    <h2>Our Services</h2>
+    <p>Complete envelope solutions to match every architectural and performance need.</p>
+  </div>
+<div class="services-grid">
+
+  <a href="services.html" class="service-card animate">
+    <img src="cladding.png" alt="Cladding">
+    <h3>Cladding</h3>
+    <p>Premium insulated panel systems for reliable and aesthetic wall protection.</p>
+  </a>
+
+  <a href="services.html" class="service-card animate">
+    <img src="curtain-walling.png" alt="Curtain Walling">
+    <h3>Curtain Walling</h3>
+    <p>Framed glass facades designed for style, light, and energy efficiency.</p>
+  </a>
+
+  <a href="services.html" class="service-card animate">
+    <img src="facades-rainscreens.png" alt="Facades">
+    <h3>Facades & Rainscreens</h3>
+    <p>Ventilated and decorative systems that protect while elevating design.</p>
+  </a>
+
+</div>
+
+</section>
+
+
+<section id="why" class="why-choose">
+  <div class="why-text animate">
+    <h2>Why Choose Us?</h2>
+    <ul>
+      <li>Extensive experience with international data centers</li>
+      <li>Fast and professional execution only – no design hassle</li>
+      <li>Skilled workforce & state-of-the-art equipment</li>
+      <li>Flexible deployment across all of Europe</li>
+    </ul>
+  </div>
+
+
+</section>
+
+
+  <section class="carousel" data-animate>
+    <div class="carousel-track">
+      <img src="poze/1.jpg" alt="Project 1">
+      <img src="poze/2.jpg" alt="Project 2">
+      <img src="poze/5ed.png" alt="Project 3">
+      <img src="poze/6.jpg" alt="Project 4">
+      <img src="poze/7.jpg" alt="Project 5">
+      <img src="poze/10.jpg" alt="Project 6">
+      <img src="poze/18.jpg" alt="Project 7">
+      <img src="poze/13.jpg" alt="Project 8">
+    </div>
+  </section>
+
+  <section id="contact" class="contact" data-animate>
+    <h2 style="text-align: center; font-size: 2rem; margin-bottom: 30px;">Contact Us</h2>
+    <form action="https://formspree.io/f/mdkzozwn" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="company" placeholder="Company Name">
+      <textarea name="message" rows="5" placeholder="Tell us about your project..." required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+</div>
+
+<footer style="background: #1d252d; color: #fff; padding: 60px 20px; text-align: center;">
+  <div class="container" style="max-width: 1100px; margin: auto;">
+    <div class="footer-brand">
+      <img src="your-logo.png" alt="Enigma Logo" style="height: 60px;">
+      <p style="margin-top: 10px;">Specialists in cladding, curtain walling and rainscreen systems across Europe.</p>
+    </div>
+    <ul style="list-style: none; padding: 0; margin: 20px 0; display: flex; gap: 30px; justify-content: center;">
+      <li><a href="index.html" style="color: #fff; text-decoration: none;">Home</a></li>
+      <li><a href="services.html" style="color: #fff; text-decoration: none;">Services</a></li>
+      <li><a href="get-in-touch.html" style="color: #fff; text-decoration: none;">Get in Touch</a></li>
+      <li><a href="#contact" style="color: #fff; text-decoration: none;">Contact</a></li>
+    </ul>
+    <p style="margin: 10px 0;">&copy; 2025 Enigma Ltd. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
