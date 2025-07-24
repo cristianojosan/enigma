@@ -167,6 +167,25 @@ body {
     display: flex;
   }
 }
+@media (max-width: 768px) {
+  .service-block {
+    flex-direction: column !important;
+    text-align: center;
+  }
+
+  .service-block.reverse {
+    flex-direction: column !important;
+  }
+
+  .service-image, .service-text {
+    max-width: 100%;
+  }
+
+  .service-image img {
+    width: 100%;
+    height: auto;
+  }
+}
 
 </style>
   <script>
