@@ -24,7 +24,7 @@
       transform: none;
     }
     .hero-banner {
-      background: url('3.jpg') no-repeat center center/cover;
+      background: url('poze/3.jpg') no-repeat center center/cover;
       height: 100vh;
       color: white;
       display: flex;
@@ -104,7 +104,7 @@
       flex-wrap: nowrap;
       height: 600px;
       background-attachment: fixed;
-      background-image: url('8.jpg');
+      background-image: url('poze/8.jpg');
       background-size: cover;
       background-position: center;
     }
@@ -133,24 +133,26 @@
     .why-image {
       display: none;
     }
-    .carousel {
-      display: flex;
-      gap: 20px;
-      padding: 60px;
-      overflow: hidden;
-    }
-    .carousel-track {
-      display: flex;
-      animation: scrollLeft 24s linear infinite;
-      gap: 20px;
-    }
-    .carousel-track img {
-      flex: 0 0 auto;
-      width: 23%;
-      height: auto;
-      border-radius: 10px;
-      transition: transform 0.5s;
-    }
+.carousel {
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  user-select: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease;
+}
+
+.carousel-track img {
+  flex: 0 0 auto;
+  width: 300px;
+  border-radius: 10px;
+  pointer-events: none; /* esențial pentru drag */
+}
+
     .carousel-track img:hover {
       transform: scale(1.05);
     }
@@ -258,7 +260,7 @@
     .why-choose {
   display: flex;
   flex-wrap: wrap;
-  background: url('8.jpg') no-repeat center center / cover;
+  background: url('poze/8.jpg') no-repeat center center / cover;
   background-attachment: fixed;
   color: white;
   padding: 80px 60px;
@@ -344,7 +346,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: url('18.jpg') no-repeat center center / cover;
+  background: url('poze/18.jpg') no-repeat center center / cover;
   opacity: 0.5; /* ajustează după preferință */
   z-index: 0;
 }
@@ -453,52 +455,75 @@ section:last-of-type {
 }
 
 
-.burger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-  gap: 5px;
-}
-
-.burger div {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  transition: 0.3s;
-}
-
-@media (max-width: 768px) {
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    background-color: #1e3666;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    padding: 15px;
-    z-index: 999;
-  }
-
-  .nav-menu a {
-    margin: 10px 0;
-    display: block;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-
-  .burger {
-    display: flex;
-  }
-}
 
 
 
   </style>
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.querySelector('.carousel-track');
+  let isDragging = false;
+  let startX = 0;
+  let currentTranslate = 0;
+  let prevTranslate = 0;
+  let animationID;
+  let autoScrollInterval;
+
+  const setPosition = () => {
+    track.style.transform = `translateX(${currentTranslate}px)`;
+  };
+
+  const animation = () => {
+    setPosition();
+    if (isDragging) requestAnimationFrame(animation);
+  };
+
+  const startDrag = (x) => {
+    isDragging = true;
+    startX = x - currentTranslate;
+    cancelAnimationFrame(animationID);
+    clearInterval(autoScrollInterval);
+    animationID = requestAnimationFrame(animation);
+  };
+
+  const endDrag = () => {
+    isDragging = false;
+    prevTranslate = currentTranslate;
+    startAutoScroll();
+  };
+
+  const drag = (x) => {
+    if (!isDragging) return;
+    currentTranslate = x - startX;
+  };
+
+  // Mouse
+  track.parentElement.addEventListener('mousedown', e => startDrag(e.clientX));
+  window.addEventListener('mouseup', endDrag);
+  window.addEventListener('mousemove', e => drag(e.clientX));
+
+  // Touch
+  track.parentElement.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
+  window.addEventListener('touchend', endDrag);
+  window.addEventListener('touchmove', e => drag(e.touches[0].clientX));
+
+  // Auto-scroll
+  function startAutoScroll() {
+    autoScrollInterval = setInterval(() => {
+      currentTranslate -= 1;
+      if (Math.abs(currentTranslate) >= track.scrollWidth - window.innerWidth) {
+        currentTranslate = 0;
+      }
+      setPosition();
+    }, 16); // ~60 FPS
+  }
+
+  startAutoScroll();
+});
+</script>
+
+
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
   const observer = new IntersectionObserver((entries) => {
@@ -566,6 +591,61 @@ section:last-of-type {
 
 
   </script>
+  <script>
+  const track = document.querySelector('.carousel-track');
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+
+  track.addEventListener('mousedown', (e) => {
+    isDown = true;
+    track.classList.add('active');
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+    track.style.animation = 'none'; // stop auto scroll
+  });
+
+  track.addEventListener('mouseleave', () => {
+    isDown = false;
+    track.classList.remove('active');
+    track.style.animation = ''; // resume animation
+  });
+
+  track.addEventListener('mouseup', () => {
+    isDown = false;
+    track.classList.remove('active');
+    track.style.animation = ''; // resume animation
+  });
+
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startX) * 1.5; // scroll-fast multiplier
+    track.scrollLeft = scrollLeft - walk;
+  });
+
+  // Touch support for mobile
+  track.addEventListener('touchstart', (e) => {
+    isDown = true;
+    startX = e.touches[0].pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+    track.style.animation = 'none';
+  });
+
+  track.addEventListener('touchend', () => {
+    isDown = false;
+    track.style.animation = '';
+  });
+
+  track.addEventListener('touchmove', (e) => {
+    if (!isDown) return;
+    const x = e.touches[0].pageX - track.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    track.scrollLeft = scrollLeft - walk;
+  });
+</script>
+
   <style>
     .site-header {
   position: sticky;
@@ -607,13 +687,63 @@ section:last-of-type {
     opacity: 1;
     transform: translateY(0);
   }
-</style>
-</head>
-  <script>
-  function toggleMenu() {
-    document.getElementById('navMenu').classList.toggle('active');
+
+  .burger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    background-color: #1e3666;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    padding: 15px;
+    z-index: 999;
   }
-</script>
+
+  .nav-menu a {
+    margin: 10px 0;
+    display: block;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .burger {
+    display: flex;
+  }
+}
+.carousel {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+  overflow-x: scroll;
+  cursor: grab;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
+</style>
+
+</head>
 
 <body>
   <div class="container">
@@ -703,14 +833,14 @@ section:last-of-type {
 
   <section class="carousel" data-animate>
     <div class="carousel-track">
-      <img src="1.jpg" alt="Project 1">
-      <img src="2.jpg" alt="Project 2">
-      <img src="5ed.png" alt="Project 3">
-      <img src="6.jpg" alt="Project 4">
-      <img src="7.jpg" alt="Project 5">
-      <img src="10.jpg" alt="Project 6">
-      <img src="18.jpg" alt="Project 7">
-      <img src="13.jpg" alt="Project 8">
+      <img src="poze/1.jpg" alt="Project 1">
+      <img src="poze/2.jpg" alt="Project 2">
+      <img src="poze/5ed.png" alt="Project 3">
+      <img src="poze/6.jpg" alt="Project 4">
+      <img src="poze/7.jpg" alt="Project 5">
+      <img src="poze/10.jpg" alt="Project 6">
+      <img src="poze/18.jpg" alt="Project 7">
+      <img src="poze/13.jpg" alt="Project 8">
     </div>
   </section>
 
