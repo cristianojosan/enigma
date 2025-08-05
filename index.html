@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Enigma Ltd - Cladding Subcontractor</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+</head>
   <style>
     html {
       scroll-behavior: smooth;
@@ -133,26 +135,24 @@
     .why-image {
       display: none;
     }
-.carousel {
-  overflow: hidden;
-  position: relative;
-  cursor: grab;
-  user-select: none;
-}
-
-.carousel-track {
-  display: flex;
-  gap: 20px;
-  transition: transform 0.3s ease;
-}
-
-.carousel-track img {
-  flex: 0 0 auto;
-  width: 300px;
-  border-radius: 10px;
-  pointer-events: none; /* esențial pentru drag */
-}
-
+    .carousel {
+      display: flex;
+      gap: 20px;
+      padding: 60px;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      animation: scrollLeft 24s linear infinite;
+      gap: 20px;
+    }
+    .carousel-track img {
+      flex: 0 0 auto;
+      width: 23%;
+      height: auto;
+      border-radius: 10px;
+      transition: transform 0.5s;
+    }
     .carousel-track img:hover {
       transform: scale(1.05);
     }
@@ -422,6 +422,7 @@ section {
 
 .service-card img {
   height: 300px;
+  width: 200px;
   margin-bottom: 20px;
 }
 
@@ -455,75 +456,51 @@ section:last-of-type {
 }
 
 
+.burger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+}
 
+.burger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    background-color: #1e3666;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    padding: 15px;
+    z-index: 999;
+  }
+
+  .nav-menu a {
+    margin: 10px 0;
+    display: block;
+  }
+
+  .nav-menu.active {
+    display: flex;
+  }
+
+  .burger {
+    display: flex;
+  }
+}
 
 
   </style>
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const track = document.querySelector('.carousel-track');
-  let isDragging = false;
-  let startX = 0;
-  let currentTranslate = 0;
-  let prevTranslate = 0;
-  let animationID;
-  let autoScrollInterval;
-
-  const setPosition = () => {
-    track.style.transform = `translateX(${currentTranslate}px)`;
-  };
-
-  const animation = () => {
-    setPosition();
-    if (isDragging) requestAnimationFrame(animation);
-  };
-
-  const startDrag = (x) => {
-    isDragging = true;
-    startX = x - currentTranslate;
-    cancelAnimationFrame(animationID);
-    clearInterval(autoScrollInterval);
-    animationID = requestAnimationFrame(animation);
-  };
-
-  const endDrag = () => {
-    isDragging = false;
-    prevTranslate = currentTranslate;
-    startAutoScroll();
-  };
-
-  const drag = (x) => {
-    if (!isDragging) return;
-    currentTranslate = x - startX;
-  };
-
-  // Mouse
-  track.parentElement.addEventListener('mousedown', e => startDrag(e.clientX));
-  window.addEventListener('mouseup', endDrag);
-  window.addEventListener('mousemove', e => drag(e.clientX));
-
-  // Touch
-  track.parentElement.addEventListener('touchstart', e => startDrag(e.touches[0].clientX));
-  window.addEventListener('touchend', endDrag);
-  window.addEventListener('touchmove', e => drag(e.touches[0].clientX));
-
-  // Auto-scroll
-  function startAutoScroll() {
-    autoScrollInterval = setInterval(() => {
-      currentTranslate -= 1;
-      if (Math.abs(currentTranslate) >= track.scrollWidth - window.innerWidth) {
-        currentTranslate = 0;
-      }
-      setPosition();
-    }, 16); // ~60 FPS
-  }
-
-  startAutoScroll();
-});
-</script>
-
-
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
   const observer = new IntersectionObserver((entries) => {
@@ -591,61 +568,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   </script>
-  <script>
-  const track = document.querySelector('.carousel-track');
-  let isDown = false;
-  let startX;
-  let scrollLeft;
-
-  track.addEventListener('mousedown', (e) => {
-    isDown = true;
-    track.classList.add('active');
-    startX = e.pageX - track.offsetLeft;
-    scrollLeft = track.scrollLeft;
-    track.style.animation = 'none'; // stop auto scroll
-  });
-
-  track.addEventListener('mouseleave', () => {
-    isDown = false;
-    track.classList.remove('active');
-    track.style.animation = ''; // resume animation
-  });
-
-  track.addEventListener('mouseup', () => {
-    isDown = false;
-    track.classList.remove('active');
-    track.style.animation = ''; // resume animation
-  });
-
-  track.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - track.offsetLeft;
-    const walk = (x - startX) * 1.5; // scroll-fast multiplier
-    track.scrollLeft = scrollLeft - walk;
-  });
-
-  // Touch support for mobile
-  track.addEventListener('touchstart', (e) => {
-    isDown = true;
-    startX = e.touches[0].pageX - track.offsetLeft;
-    scrollLeft = track.scrollLeft;
-    track.style.animation = 'none';
-  });
-
-  track.addEventListener('touchend', () => {
-    isDown = false;
-    track.style.animation = '';
-  });
-
-  track.addEventListener('touchmove', (e) => {
-    if (!isDown) return;
-    const x = e.touches[0].pageX - track.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    track.scrollLeft = scrollLeft - walk;
-  });
-</script>
-
   <style>
     .site-header {
   position: sticky;
@@ -687,69 +609,15 @@ document.addEventListener('DOMContentLoaded', () => {
     opacity: 1;
     transform: translateY(0);
   }
-
-  .burger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
-  gap: 5px;
-}
-
-.burger div {
-  width: 25px;
-  height: 3px;
-  background-color: white;
-  transition: 0.3s;
-}
-
-@media (max-width: 768px) {
-  .nav-menu {
-    display: none;
-    flex-direction: column;
-    background-color: #1e3666;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    padding: 15px;
-    z-index: 999;
-  }
-
-  .nav-menu a {
-    margin: 10px 0;
-    display: block;
-  }
-
-  .nav-menu.active {
-    display: flex;
-  }
-
-  .burger {
-    display: flex;
-  }
-}
-.carousel {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-  overflow-x: scroll;
-  cursor: grab;
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Opera */
-}
-
 </style>
 
-</head>
 <script>
   function toggleMenu() {
-    const navMenu = document.getElementById('navMenu');
-    navMenu.classList.toggle('active');
+    document.getElementById('navMenu').classList.toggle('active');
   }
 </script>
+
+
 
 <body>
   <div class="container">
@@ -775,7 +643,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </header>
 
 
-
 <section class="hero-section">
   <div class="hero-banner" data-animate>
     <div class="hero-content">
@@ -792,34 +659,35 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
 </section>
-  <section id="services" class="services-section">
-  <div class="services-header animate">
-    <h2>Our Services</h2>
-    <p>Complete envelope solutions to match every architectural and performance need.</p>
-  </div>
-<div class="services-grid">
-
-  <a href="services.html" class="service-card animate">
-    <img src="cladding.png" alt="Cladding">
-    <h3>Cladding</h3>
-    <p>Premium insulated panel systems for reliable and aesthetic wall protection.</p>
-  </a>
-
-  <a href="services.html" class="service-card animate">
-    <img src="curtain-walling.png" alt="Curtain Walling">
-    <h3>Curtain Walling</h3>
-    <p>Framed glass facades designed for style, light, and energy efficiency.</p>
-  </a>
-
-  <a href="services.html" class="service-card animate">
-    <img src="facades-rainscreens.png" alt="Facades">
-    <h3>Facades & Rainscreens</h3>
-    <p>Ventilated and decorative systems that protect while elevating design.</p>
-  </a>
-
-</div>
-
-</section>
+<section id="services" class="services-section">
+    <div class="services-header animate">
+      <h2>Our Services</h2>
+      <p>Complete envelope solutions to match every architectural and performance need.</p>
+    </div>
+    <div class="services-grid">
+      <a href="services.html" class="service-card animate">
+        <img src="cladding.png" alt="Cladding">
+        <h3>Cladding</h3>
+        <p>Premium insulated panel systems for reliable and aesthetic wall protection.</p>
+      </a>
+      <a href="flashings1.html" class="service-card animate">
+        <img src="bend.png" alt="Metal Bending">
+        <h3>Metal Bending</h3>
+        <p>Precision metal bending and custom flashing solutions tailored for modern cladding systems.</p>
+      </a>
+      <a href="services.html" class="service-card animate">
+        <img src="curtain-walling.png" alt="Curtain Walling">
+        <h3>Curtain Walling</h3>
+        <p>Framed glass facades designed for style, light, and energy efficiency.</p>
+      </a>
+      <a href="services.html" class="service-card animate">
+        <img src="facades-rainscreens.png" alt="Facades & Rainscreens">
+        <h3>Facades & Rainscreens</h3>
+        <p>Ventilated and decorative systems that protect while elevating design.</p>
+      </a>
+      
+    </div>
+  </section>
 
 
 <section id="why" class="why-choose">
@@ -842,6 +710,10 @@ document.addEventListener('DOMContentLoaded', () => {
       <img src="1.jpg" alt="Project 1">
       <img src="2.jpg" alt="Project 2">
       <img src="5ed.png" alt="Project 3">
+      <img src="new1.jpg" alt="Project 8">
+      <img src="new2.jpg" alt="Project 8">
+      <img src="new3.jpg" alt="Project 8">
+      <img src="a5.png" alt="Project 4">
       <img src="6.jpg" alt="Project 4">
       <img src="7.jpg" alt="Project 5">
       <img src="10.jpg" alt="Project 6">
