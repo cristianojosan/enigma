@@ -135,30 +135,93 @@
     .why-image {
       display: none;
     }
-    .carousel {
-      display: flex;
-      gap: 20px;
-      padding: 60px;
+    /* Carousel - biplat style */
+    .carousel-section {
+      padding: 80px 24px 100px;
+      background: linear-gradient(180deg, #e8eef5 0%, #f4f6f8 100%);
+      text-align: center;
+    }
+    .carousel-section .carousel-header {
+      margin-bottom: 48px;
+    }
+    .carousel-section .carousel-header h2 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #1e3666;
+      margin: 0 0 12px 0;
+    }
+    .carousel-section .carousel-header p {
+      font-size: 1.1rem;
+      color: #555;
+      margin: 0;
+      max-width: 560px;
+      margin-inline: auto;
+    }
+    .carousel-wrap {
+      position: relative;
       overflow: hidden;
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 3.5rem;
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(30, 54, 102, 0.12);
+    }
+    .carousel-wrap:active {
+      cursor: grabbing;
     }
     .carousel-track {
       display: flex;
-      animation: scrollLeft 24s linear infinite;
-      gap: 20px;
+      width: 1200%;
+      transition: transform 0.4s ease-out;
     }
-    .carousel-track img {
-      flex: 0 0 auto;
-      width: 23%;
-      height: auto;
-      border-radius: 10px;
-      transition: transform 0.5s;
+    .carousel-slide {
+      flex: 0 0 8.333333%;
+      aspect-ratio: 16 / 10;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(30, 54, 102, 0.15);
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     }
-    .carousel-track img:hover {
-      transform: scale(1.05);
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
     }
-    @keyframes scrollLeft {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(30, 54, 102, 0.9);
+      color: #00cec9;
+      font-size: 1.75rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(30, 54, 102, 0.3);
+    }
+    .carousel-btn:hover {
+      background: #1e3666;
+      color: #00cec9;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 6px 20px rgba(30, 54, 102, 0.4);
+    }
+    .carousel-prev {
+      left: 1rem;
+    }
+    .carousel-next {
+      right: 1rem;
     }
     .contact {
       background-color: #1e3666;
@@ -198,11 +261,6 @@
         flex-direction: column;
       }
     }
-    @media (max-width: 1024px) {
-      .carousel-track img {
-        width: 30%;
-      }
-    }
     @media (max-width: 768px) {
       .hero-banner {
         padding: 30px;
@@ -228,8 +286,28 @@
         height: auto;
         padding: 40px 20px;
       }
-      .carousel-track img {
-        width: 45%;
+      .carousel-section {
+        padding: 60px 16px 80px;
+      }
+      .carousel-section .carousel-header h2 {
+        font-size: 1.9rem;
+      }
+      .carousel-section .carousel-header {
+        margin-bottom: 36px;
+      }
+      .carousel-wrap {
+        padding: 0 2.75rem;
+      }
+      .carousel-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.5rem;
+      }
+      .carousel-prev {
+        left: 0.5rem;
+      }
+      .carousel-next {
+        right: 0.5rem;
       }
     }
     .trusted-by {
@@ -615,6 +693,71 @@ section:last-of-type {
   function toggleMenu() {
     document.getElementById('navMenu').classList.toggle('active');
   }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('carousel');
+    if (!carousel) return;
+    const track = carousel.querySelector('.carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
+    const totalSlides = slides.length;
+    const SLIDE_WIDTH = 100 / totalSlides;
+    const INTERVAL_MS = 5000;
+
+    let currentIndex = 0;
+    let autoTimer = null;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function goToSlide(index) {
+      currentIndex = ((index % totalSlides) + totalSlides) % totalSlides;
+      track.style.transform = `translateX(-${currentIndex * SLIDE_WIDTH}%)`;
+    }
+
+    function next() {
+      goToSlide(currentIndex + 1);
+      resetAutoTimer();
+    }
+
+    function prev() {
+      goToSlide(currentIndex - 1);
+      resetAutoTimer();
+    }
+
+    function resetAutoTimer() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(next, INTERVAL_MS);
+    }
+
+    prevBtn?.addEventListener('click', prev);
+    nextBtn?.addEventListener('click', next);
+
+    carousel.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches?.[0]?.screenX ?? e.touches[0].screenX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches?.[0]?.screenX ?? touchStartX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? next() : prev();
+      }
+    }, { passive: true });
+
+    let mouseStartX = 0;
+    carousel.addEventListener('mousedown', (e) => {
+      mouseStartX = e.screenX;
+    });
+    carousel.addEventListener('mouseup', (e) => {
+      const diff = mouseStartX - e.screenX;
+      if (Math.abs(diff) > 50) {
+        diff > 0 ? next() : prev();
+      }
+    });
+
+    autoTimer = setInterval(next, INTERVAL_MS);
+  });
 </script>
 
 
@@ -636,6 +779,7 @@ section:last-of-type {
     <nav class="nav-menu" id="navMenu">
       <a href="index.html#services">Services</a>
       <a href="index.html#why">Why Us</a>
+      <a href="index.html#gallery">Our Work</a>
       <a href="index.html#contact">Contact</a>
       <a href="get-in-touch.html">Get in Touch</a>
     </nav>
@@ -705,20 +849,27 @@ section:last-of-type {
 </section>
 
 
-  <section class="carousel" data-animate>
-    <div class="carousel-track">
-      <img src="1.jpg" alt="Project 1">
-      <img src="2.jpg" alt="Project 2">
-      <img src="5ed.png" alt="Project 3">
-      <img src="new1.jpg" alt="Project 8">
-      <img src="new2.jpg" alt="Project 8">
-      <img src="new3.jpg" alt="Project 8">
-      <img src="a5.png" alt="Project 4">
-      <img src="6.jpg" alt="Project 4">
-      <img src="7.jpg" alt="Project 5">
-      <img src="10.jpg" alt="Project 6">
-      <img src="18.jpg" alt="Project 7">
-      <img src="13.jpg" alt="Project 8">
+  <section id="gallery" class="carousel-section" data-animate>
+    <div class="carousel-header">
+      <h2>Our Work</h2>
+    </div>
+    <div class="carousel-wrap" id="carousel">
+      <div class="carousel-track">
+        <div class="carousel-slide"><img src="1.jpg" alt="Project 1" loading="lazy"></div>
+        <div class="carousel-slide"><img src="2.jpg" alt="Project 2" loading="lazy"></div>
+        <div class="carousel-slide"><img src="5ed.png" alt="Project 3" loading="lazy"></div>
+        <div class="carousel-slide"><img src="new1.jpg" alt="Project 4" loading="lazy"></div>
+        <div class="carousel-slide"><img src="new2.jpg" alt="Project 5" loading="lazy"></div>
+        <div class="carousel-slide"><img src="new3.jpg" alt="Project 6" loading="lazy"></div>
+        <div class="carousel-slide"><img src="a5.png" alt="Project 7" loading="lazy"></div>
+        <div class="carousel-slide"><img src="6.jpg" alt="Project 8" loading="lazy"></div>
+        <div class="carousel-slide"><img src="7.jpg" alt="Project 9" loading="lazy"></div>
+        <div class="carousel-slide"><img src="10.jpg" alt="Project 10" loading="lazy"></div>
+        <div class="carousel-slide"><img src="18.jpg" alt="Project 11" loading="lazy"></div>
+        <div class="carousel-slide"><img src="13.jpg" alt="Project 12" loading="lazy"></div>
+      </div>
+      <button class="carousel-btn carousel-prev" aria-label="Previous">‹</button>
+      <button class="carousel-btn carousel-next" aria-label="Next">›</button>
     </div>
   </section>
 
